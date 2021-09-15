@@ -454,7 +454,7 @@ def compile_action_configs(
             configurators = [
                 swift_toolchain_config.add_arg(
                     "-debug-prefix-map",
-                    "/__build_bazel_rules_swift/sources=.",
+                    "{}=.".format(_SOURCES_VFS_ROOT),
                 ),
             ],
             features = [
@@ -489,7 +489,7 @@ def compile_action_configs(
             configurators = [
                 swift_toolchain_config.add_arg(
                     "-coverage-prefix-map",
-                    "/__build_bazel_rules_swift/sources=.",
+                    "{}=.".format(_SOURCES_VFS_ROOT),
                 ),
             ],
             features = [
