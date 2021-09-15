@@ -453,6 +453,25 @@ def compile_action_configs(
             ],
             configurators = [
                 swift_toolchain_config.add_arg(
+                    "-debug-prefix-map",
+                    "/__build_bazel_rules_swift/sources=.",
+                ),
+            ],
+            features = [
+                [SWIFT_FEATURE_SOURCES_VFSOVERLAY, SWIFT_FEATURE_VFSOVERLAY, SWIFT_FEATURE_DEBUG_PREFIX_MAP, SWIFT_FEATURE_DBG],
+                [SWIFT_FEATURE_SOURCES_VFSOVERLAY, SWIFT_FEATURE_VFSOVERLAY, SWIFT_FEATURE_DEBUG_PREFIX_MAP, SWIFT_FEATURE_FASTBUILD],
+                [SWIFT_FEATURE_SOURCES_VFSOVERLAY, SWIFT_FEATURE_VFSOVERLAY, SWIFT_FEATURE_DEBUG_PREFIX_MAP, SWIFT_FEATURE_FULL_DEBUG_INFO],
+            ],
+        ),
+
+        # Make paths written into coverage info workspace-relative.
+        swift_toolchain_config.action_config(
+            actions = [
+                swift_action_names.COMPILE,
+                swift_action_names.DERIVE_FILES,
+            ],
+            configurators = [
+                swift_toolchain_config.add_arg(
                     "-Xwrapped-swift=-coverage-prefix-pwd-is-dot",
                 ),
             ],
@@ -470,7 +489,7 @@ def compile_action_configs(
             configurators = [
                 swift_toolchain_config.add_arg(
                     "-coverage-prefix-map",
-                    "--swiftcopt=/__build_bazel_rules_swift/sources=.",
+                    "/__build_bazel_rules_swift/sources=.",
                 ),
             ],
             features = [
