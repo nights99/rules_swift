@@ -40,6 +40,10 @@ bzl_library(
         "//swift/internal:swift_usage_aspect",
     ],
 )
+exports_files([
+    "swift.bzl",
+    "package.bzl",
+])
 
 # Consumed by Bazel integration tests.
 filegroup(
