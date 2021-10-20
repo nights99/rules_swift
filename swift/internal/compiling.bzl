@@ -1728,7 +1728,7 @@ def compile(
     defines_set = sets.make(defines)
     for module in transitive_modules:
         swift_module = module.swift
-        if not swift_module:
+        if not swift_module or not swift_module.swiftmodule:
             continue
         transitive_swiftmodules.append(swift_module.swiftmodule)
         if swift_module.defines:
@@ -2641,8 +2641,10 @@ def _swift_module_search_path_map_fn(module):
     Returns:
         The dirname of the module's `.swiftmodule` file.
     """
-    if module.swift:
+    if module.swift and module.swift.swiftmodule:
         return module.swift.swiftmodule.dirname
+    elif module.swift and module.swift.swiftdoc:
+        return module.swift.swiftdoc.dirname
     else:
         return None
 

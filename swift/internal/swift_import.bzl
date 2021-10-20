@@ -27,6 +27,9 @@ def _swift_import_impl(ctx):
     swiftdoc = ctx.file.swiftdoc
     swiftmodule = ctx.file.swiftmodule
 
+    if swiftmodule.basename.startswith("C"):
+        swiftmodule = None
+
     # We have to depend on the C++ toolchain directly here to create the
     # libraries to link. Depending on the Swift toolchain causes a problematic
     # cyclic dependency for built-from-source toolchains.
@@ -53,7 +56,7 @@ def _swift_import_impl(ctx):
 
     providers = [
         DefaultInfo(
-            files = depset(archives + [swiftmodule] + compact([swiftdoc])),
+            files = depset(archives + ([swiftmodule] if swiftmodule!=None else []) + ([swiftdoc] if swiftdoc!=None else [])),
             runfiles = ctx.runfiles(
                 collect_data = True,
                 collect_default = True,
@@ -77,7 +80,7 @@ def _swift_import_impl(ctx):
             module_map = None,
             objc_header = None,
             static_archives = archives,
-            swiftmodules = [swiftmodule],
+            swiftmodules = ([swiftmodule] if swiftmodule!=None else []),
         ),
         swift_common.create_swift_info(
             modules = [
@@ -123,7 +126,7 @@ The `.swiftdoc` file provided to Swift targets that depend on this target.
                 doc = """\
 The `.swiftmodule` file provided to Swift targets that depend on this target.
 """,
-                mandatory = True,
+                mandatory = False,
             ),
             "_cc_toolchain": attr.label(
                 default = Label("@bazel_tools//tools/cpp:current_cc_toolchain"),

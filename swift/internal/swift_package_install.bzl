@@ -33,6 +33,7 @@ def _swift_package_install_impl(ctx):
         content = """
         swift package resolve
         swift package show-dependencies --format=json > depgraph.json
+        swift package dump-pif >pif.json
         """,
         executable = True,
     )
@@ -54,7 +55,8 @@ def _swift_package_install_impl(ctx):
             ctx.name,
             swift_path,
             ar_path,
-            ".build/release",
+            # ".build/release",
+            ".build/debug",
         ],
         quiet = QUIET,
     )
